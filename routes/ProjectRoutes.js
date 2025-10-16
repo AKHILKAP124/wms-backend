@@ -11,8 +11,11 @@ import {
   removeMemberFromProject,
   updateProject,
 } from "../controllers/ProjectController.js";
+import { protect } from "../middleware/auth.js";
 
 const projectRouter = Router();
+
+projectRouter.use(protect);
 
 projectRouter.post("/add", addProject);
 projectRouter.post("/addmember", addMemberToProject);
@@ -22,9 +25,9 @@ projectRouter.post(
   deleteMemberFromProjectOfspecificUser
 );
 projectRouter.put("/update", updateProject);
-projectRouter.post("/delete", deleteProject);
-projectRouter.post("/getbyid", getProjectById);
-projectRouter.post("/getuserallprojects", getAllUserProjects);
+projectRouter.post("/delete/:projectId", deleteProject);
+projectRouter.post("/get/:projectId", getProjectById);
+projectRouter.post("/get", getAllUserProjects);
 projectRouter.post("/getprojectmanager", getProjectManager);
 
 export default projectRouter;

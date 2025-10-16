@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 
 const messageSchema = new mongoose.Schema({
-    sender: {
+    sender_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
     },
-    receiver: {
+    receiver_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Project",
         required: true,
@@ -15,7 +15,10 @@ const messageSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-        createdAt: {
+    attachments: {
+        type: String,
+    },
+        created_at: {
             type: String,
         },
 });

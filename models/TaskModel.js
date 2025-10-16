@@ -6,7 +6,7 @@ const taskSchema = new mongoose.Schema({
         ref: "User",
         required: true,
     },
-    name: {
+    title: {
         type: String,
         required: true,
     },
@@ -18,26 +18,24 @@ const taskSchema = new mongoose.Schema({
         enum: ["New task", "In progress", "Completed", "On hold"],
         default: "New task",
     },
-    type: {
-        type: String,
-        enum: ["Operational", "Technical", "Strategic", "Financial"],
-        default: "Operational",
-    },
     estimatedTime: {
         type: String,
         default: "0s",
     },
     dueDate: {
         type: Date,
+        default: null,
+
     },
     priority: {
         type: String,
-        enum: ["Lowest", "Low", "Medium", "High", "Urgent", "None"],
-        default: "None"
+        enum: ["Low", "Medium", "High", "Urgent"],
+        default: "Low"
     },
 },
 {
     timestamps: true,
 });
 
-export default mongoose.model("Task", taskSchema);
+const Task = mongoose.model("Task", taskSchema);
+export default Task;

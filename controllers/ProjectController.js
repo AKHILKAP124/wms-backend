@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Project from "../models/ProjectModel.js";
 import User from "../models/UserModel.js";
 
@@ -187,7 +188,8 @@ const deleteMemberFromProjectOfspecificUser = async (req, res) => {
 
 const deleteProject = async (req, res) => {
   try {
-    const { projectId } = req.body;
+    const { projectId } = req.params
+
     if (!projectId) {
       return res.status(400).json({ message: "Project ID is required" });
     }
@@ -222,15 +224,52 @@ const updateProject = async (req, res) => {
 
 const getAllUserProjects = async (req, res) => {
   try {
-    const { id } = req.body;
-    if (!id) {
+    const { userId } = req.body;
+    if (!userId) {
       return res.status(400).json({ message: "User ID is required" });
     }
-    const projects = await Project.find({
-      $or: [{ owner: id }, { members: id }],
-    })
-      .populate("owner")
-      .populate("members");
+    const projects = await Project.aggregate([
+      {
+        $match: {
+          $expr: {
+            $in: [new mongoose.Types.ObjectId(userId), "$members"],
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "projecttasks",
+          localField: "tasks",
+          foreignField: "_id",
+          as: "tasks",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "members",
+          foreignField: "_id",
+          as: "members",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "owner",
+          foreignField: "_id",
+          as: "owner",
+        },
+      },
+      {
+        $unwind: {
+          path: "$owner",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+    ]);
+
+    console.log(projects);
+
     if (!projects || projects.length === 0) {
       return res.status(404).json({ message: "No projects found" });
     }
@@ -243,17 +282,47 @@ const getAllUserProjects = async (req, res) => {
 
 const getProjectById = async (req, res) => {
   try {
-    const { projectId } = req.body;
+    const { projectId } = req.params;
     if (!projectId) {
       return res.status(400).json({ message: "Project ID is required" });
     }
-    const project = await Project.findById(projectId)
-      .populate("owner")
-      .populate("members");
+    const project = await Project.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(projectId), // Project ID
+        },
+      },
+      {
+        $lookup: {
+          from: "projecttasks",
+          localField: "tasks",
+          foreignField: "_id",
+          as: "tasks",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "members",
+          foreignField: "_id",
+          as: "members",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "owner",
+          foreignField: "_id",
+          as: "owner",
+        },
+      },
+  ]);
+
+    
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
     }
-    res.status(200).json({ project });
+    res.status(200).json(project[0]);
   } catch (error) {
     console.error("Error fetching project:", error);
     res.status(500).json({ message: "Server error" });

@@ -1,17 +1,22 @@
 import mongoose from "mongoose";
 
 const projectTaskSchema = new mongoose.Schema({
-    ownerId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-    },
-    projectId: {
+    project_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Project",
         required: true,
     },
-    name: {
+    assigned_to: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+    },
+    assigned_by: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+    },
+    title: {
         type: String,
         required: true,
     },
@@ -20,30 +25,21 @@ const projectTaskSchema = new mongoose.Schema({
     },
     status: {
         type: String,
+        enum: ["New task", "In progress", "Completed", "On hold"],
         default: "New task",
-    },
-    type: {
-        type: String,
-        default: "Operational",
     },
     priority: {
         type: String,
+        enum: ["Low", "Medium", "High", "Urgent"],
         default: "Low",
     },
-    dueDate: {
+    due_date: {
         type: String,
-    },
-    estimatedTime: {
-        type: String,
-        default: "0s",
-    },
-    assignedTo: {
-        type: Object,
-        default: {},
     },
 },
 {
     timestamps: true,
     });
 
-export default mongoose.model("ProjectTask", projectTaskSchema);
+const ProjectTask = mongoose.model("ProjectTasks", projectTaskSchema);
+export default ProjectTask;

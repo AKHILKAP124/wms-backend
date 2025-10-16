@@ -9,7 +9,7 @@ import http from "http";
 
 dotenv.config();
 const corsOptions = {
-  origin: "https://infraa.vercel.app",
+  origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
@@ -84,7 +84,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // routes
-
+import authRouter from "./routes/AuthRoute.js";
 import userRoutes from "./routes/UserRoutes.js";
 import taskRoutes from "./routes/TaskRoutes.js";
 import memberRoutes from "./routes/MemberRoute.js";
@@ -94,8 +94,11 @@ import messageRouter from "./routes/MessageRoute.js";
 import emailRouter from "./routes/EmailRoute.js";
 import notificationRouter from "./routes/NotificationRoute.js";
 import noteRouter from "./routes/NoteRoute.js";
+import workspaceRouter from "./routes/WorkspaceRoute.js";
 
+app.use("/api/auth", authRouter);
 app.use("/api/user", userRoutes);
+app.use("/api/workspace", workspaceRouter)
 app.use("/api/task", taskRoutes);
 app.use("/api/member", memberRoutes);
 app.use("/api/project", projectRouter);

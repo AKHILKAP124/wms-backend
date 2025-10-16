@@ -5,28 +5,31 @@ const projectSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    description: {
+        type: String,
+    },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
     },
-    members: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            required: true,
-        },
-    ],
     tasks: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Task",
-            required: true,
         },
     ],
+    members: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        },
+    ],
+    
 },
 {
     timestamps: true,
 });
 
-export default mongoose.model("Project", projectSchema);
+const Project = mongoose.model("Project", projectSchema);
+export default Project;

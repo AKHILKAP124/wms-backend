@@ -1,7 +1,8 @@
-import ProjectTask from "../models/ProjectTasksModel.js";
+import ProjectTask from "../models/ProjectTaskModel.js";
+
 
 const addProjectTask = async (req, res) => {
-
+ 
     try {
 
         const { ownerId, projectId, name, description, status, type, priority, dueDate, estimatedTime, assignedTo } = req.body;

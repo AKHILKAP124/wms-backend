@@ -1,15 +1,15 @@
 import nodemailer from "nodemailer";
 
-const SendEmail = async (req, res) => {
+const SendEmailOtp = async (email, otp) => {
+
     try {
-      const { email, otp } = req.body;
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 465,
       secure: true,
       auth: {
-        user: "quickcartspprt@gmail.com",
-        pass: "sptokcjdeaucpzyc",
+        user: "infrra.org@gmail.com",
+        pass: "uxgbzsfxpzfjrxnr",
       },
     });
 
@@ -55,7 +55,7 @@ const SendEmail = async (req, res) => {
   </html>`;
 
     const sender = {
-      from: "Infra", // sender address
+      from: "Infrra", // sender address
       to: email, // list of receivers
       subject: "Otp Verification ✔", // Subject line
       html: html, // html body
@@ -65,12 +65,13 @@ const SendEmail = async (req, res) => {
     // send mail with defined transport object
     const info = await transporter.sendMail(sender);
       if (info) {
-        
-        res.status(200).json({ message: "Email sent successfully" });
+        return true;
+      } else {
+        return false;
     }
   } catch (error) {
     return error;
   }
 };
 
-export default SendEmail;
+export default SendEmailOtp;
